@@ -1,9 +1,11 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 
 export default function ProductsPage() {
     return (
         <main className="container mx-auto max-w-7xl grid grid-cols-1 sm:grid-cols-2 gap-6 px-4 sm:px-6 lg:grid-cols-3 lg:px-8">
+            <Link href="/product-details/1">
             <article className="hover:scale-95 transition-all duration-300 cursor-pointer">
                 <div className="relative rounded-lg aspect-square w-full overflow-hidden bg-neutral-100">
                     <Image src="/images/product-placeholder.svg"
@@ -18,6 +20,9 @@ export default function ProductsPage() {
                         <p>Price: 1000$</p></footer>
                 </div>
             </article>
+            </Link>
+            
+            <Link href="/product-details/1">
             <article className="hover:scale-95 transition-all duration-300 cursor-pointer">
                 <div className="relative rounded-lg aspect-square w-full overflow-hidden bg-neutral-100">
                     <Image src="/images/product-placeholder.svg"
@@ -32,6 +37,8 @@ export default function ProductsPage() {
                         <p>Price: 1000$</p></footer>
                 </div>
             </article>
+            </Link>
+            <Link href="/product-details/1">
             <article className="hover:scale-95 transition-all duration-300 cursor-pointer">
                 <div className="relative rounded-lg aspect-square w-full overflow-hidden bg-neutral-100">
                     <Image src="/images/product-placeholder.svg"
@@ -46,6 +53,8 @@ export default function ProductsPage() {
                         <p>Price: 1000$</p></footer>
                 </div>
             </article>
+            </Link>
+            <Link href="/product-details/1">
             <article className="hover:scale-95 transition-all duration-300 cursor-pointer">
                 <div className="relative rounded-lg aspect-square w-full overflow-hidden bg-neutral-100">
                     <Image src="/images/product-placeholder.svg"
@@ -60,6 +69,8 @@ export default function ProductsPage() {
                         <p>Price: 1000$</p></footer>
                 </div>
             </article>
+            </Link>
+            <Link href="/product-details/1">
             <article className="hover:scale-95 transition-all duration-300 cursor-pointer">
                 <div className="relative rounded-lg aspect-square w-full overflow-hidden bg-neutral-100">
                     <Image src="/images/product-placeholder.svg"
@@ -74,6 +85,8 @@ export default function ProductsPage() {
                         <p>Price: 1000$</p></footer>
                 </div>
             </article>
+            </Link>
+            <Link href="/product-details/1">
             <article className="hover:scale-95 transition-all duration-300 cursor-pointer">
                 <div className="relative rounded-lg aspect-square w-full overflow-hidden bg-neutral-100">
                     <Image src="/images/product-placeholder.svg"
@@ -88,6 +101,7 @@ export default function ProductsPage() {
                         <p>Price: 1000$</p></footer>
                 </div>
             </article>
+            </Link>
         </main>
     )
 }
