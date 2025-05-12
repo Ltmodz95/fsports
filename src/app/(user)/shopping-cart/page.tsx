@@ -145,12 +145,12 @@ export default function ShoppingCartPage() {
                         </div>
 
                         <button className="w-full bg-black text-white py-3 px-6 rounded-md hover:bg-neutral-800 transition-colors mt-6">
-                            Proceed to Checkout
+                            Place Order
                         </button>
 
                         <div className="mt-4 text-center">
                             <Link 
-                                href="/"
+                                href="/products"
                                 className="text-sm text-neutral-600 hover:text-neutral-900"
                             >
                                 Continue Shopping
