@@ -3,38 +3,13 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-interface Option {
-    id: string;
-    name: string;
-    price: number;
-}
-
-interface ProductOption {
-    id: string;
-    name: string;
-    options: Option[];
-}
-
-const productOptions: ProductOption[] = [
-    {
-        id: 'material',
-        name: 'Material',
-        options: [
-            { id: 'cotton', name: 'Cotton', price: 0 },
-            { id: 'polyester', name: 'Polyester', price: 0 },
-            { id: 'wool', name: 'Wool', price: 10 },
-            { id: 'linen', name: 'Linen', price: 15 },
-            { id: 'silk', name: 'Silk', price: 20 },
-        ]
-    }
-];
-
 const basePrice = 299.99;
 
 export default function ProductDetailsPage({ params }: { params: { productId: string } }) {
     const { productId } = params;
     console.log(productId);
     const [product, setProduct] = useState<any>(null);
+    const [selectedOptions, setSelectedOptions] = useState<any>({});
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -44,6 +19,11 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
         };
         fetchProduct();
     }, []);
+
+    const handleOptionSelection = (componentId: string, optionId: string) => {
+        setSelectedOptions({ ...selectedOptions, [componentId]: optionId });
+        console.log(selectedOptions);
+    };
 
     return (
         <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -90,19 +70,24 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
                             <div key={component.id} className="space-y-2">
                                 <h3 className="text-lg font-medium text-neutral-900">{component.name}</h3>
                                 <div className="flex flex-wrap gap-2">
-                                    {/* {option.options.map((opt) => (
+                                    {component.options.map((opt: any) => (
                                         <div
+                                            style={{
+                                                backgroundColor: selectedOptions[component.id] === opt.id ? 'black' : 'white',
+                                                color: selectedOptions[component.id] === opt.id ? 'white' : 'black',
+                                            }}
+                                            onClick={() => handleOptionSelection(component.id, opt.id)}
                                             key={opt.id}
-                                            className="px-4 py-2 border border-neutral-300 rounded-md"
+                                            className="px-4 py-2 border border-neutral-300 rounded-md cursor-pointer hover:bg-neutral-100 transition-all duration-300"
                                         >
                                             {opt.name}
-                                            {opt.price > 0 && (
-                                                <span className="ml-1 text-sm text-neutral-500">
-                                                    (+${opt.price})
-                                                </span>
-                                            )}
+                                            <span className="ml-1 text-sm text-neutral-500" style={{
+                                                color: selectedOptions[component.id] === opt.id ? 'white' : '',
+                                            }}>
+                                                (+${opt.price})
+                                            </span>
                                         </div>
-                                    ))} */}
+                                    ))}
                                 </div>
                             </div>
                         ))}
@@ -110,7 +95,7 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
 
                     <div className="w-full bg-black text-white py-3 px-6 rounded-md flex items-center justify-between mt-6">
                         <span>Add to Cart</span>
-                        <span className="font-medium">${basePrice}</span>
+                        <span className="font-medium">${product?.base_price}</span>
                     </div>
                 </div>
             </div>
