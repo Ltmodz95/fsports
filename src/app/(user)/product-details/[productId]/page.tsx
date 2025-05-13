@@ -10,6 +10,7 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
     console.log(productId);
     const [product, setProduct] = useState<any>(null);
     const [selectedOptions, setSelectedOptions] = useState<any>({});
+    const [compatibilityIssues, setCompatibilityIssues] = useState<any>([]);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -21,9 +22,23 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
     }, []);
 
     const handleOptionSelection = (componentId: string, optionId: string) => {
+        if (selectedOptions[componentId] === optionId) {
+            const newSelectedOptions = { ...selectedOptions };
+            delete newSelectedOptions[componentId];
+            setSelectedOptions(newSelectedOptions);
+            return;
+        }
         setSelectedOptions({ ...selectedOptions, [componentId]: optionId });
         console.log(selectedOptions);
     };
+
+    const calculatePrice = () => {
+        let price = parseFloat(product?.base_price || '0');
+        product?.components.forEach((component: any) => {
+            price += parseFloat(component.options.find((option: any) => option.id === selectedOptions[component.id])?.price || '0');
+        });
+        return price;
+    }
 
     return (
         <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -58,13 +73,14 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
                     </div>
 
                     <div className="space-y-6 mt-6">
-                        <div className="bg-red-50 border border-red-200 rounded-md p-4">
+                        {compatibilityIssues.length > 0 && <div className="bg-red-50 border border-red-200 rounded-md p-4">
                             <h3 className="text-red-800 font-medium mb-2">Compatibility Issues</h3>
                             <ul className="list-disc list-inside space-y-1">
-                                <li className="text-red-700 text-sm">Silk material is not compatible with Wool material</li>
-                                <li className="text-red-700 text-sm">Linen material is not compatible with Cotton material</li>
+                                {compatibilityIssues.map((issue: any) => (
+                                    <li className="text-red-700 text-sm">{issue}</li>
+                                ))}
                             </ul>
-                        </div>
+                        </div>}
 
                         {product?.components.map((component: any) => (
                             <div key={component.id} className="space-y-2">
@@ -95,7 +111,7 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
 
                     <div className="w-full bg-black text-white py-3 px-6 rounded-md flex items-center justify-between mt-6">
                         <span>Add to Cart</span>
-                        <span className="font-medium">${product?.base_price}</span>
+                        <span className="font-medium">${calculatePrice()}</span>
                     </div>
                 </div>
             </div>
