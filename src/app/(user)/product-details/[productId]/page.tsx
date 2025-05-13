@@ -24,8 +24,6 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
     }, [selectedOptions]);
 
     const checkCompatibility = async () => {
-        console.log(selectedOptions);
-        console.log("here");
         const response = await fetch(`http://localhost:3000/options/check_compatibility`, {
             method: 'POST',
             body: JSON.stringify({
@@ -56,6 +54,10 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
         });
         return price;
     }
+
+    const handleAddToCart = () => {
+        if (compatibilityIssues.length > 0) return;
+    };
 
     return (
         <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -93,8 +95,8 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
                         {compatibilityIssues.length > 0 && <div className="bg-red-50 border border-red-200 rounded-md p-4">
                             <h3 className="text-red-800 font-medium mb-2">Compatibility Issues</h3>
                             <ul className="list-disc list-inside space-y-1">
-                                {compatibilityIssues.map((issue: any) => (
-                                    <li className="text-red-700 text-sm">{issue}</li>
+                                {compatibilityIssues.map((issue: any, index: number) => (
+                                    <li key={index} className="text-red-700 text-sm">{issue}</li>
                                 ))}
                             </ul>
                         </div>}
@@ -126,10 +128,18 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
                         ))}
                     </div>
 
-                    <div className="w-full bg-black text-white py-3 px-6 rounded-md flex items-center justify-between mt-6">
+                    <button 
+                        onClick={handleAddToCart}
+                        disabled={compatibilityIssues.length > 0}
+                        className={`w-full py-3 px-6 rounded-md flex items-center justify-between mt-6 transition-colors ${
+                            compatibilityIssues.length > 0 
+                                ? 'bg-neutral-300 text-neutral-500 cursor-not-allowed' 
+                                : 'bg-black text-white hover:bg-neutral-800'
+                        }`}
+                    >
                         <span>Add to Cart</span>
                         <span className="font-medium">${calculatePrice()}</span>
-                    </div>
+                    </button>
                 </div>
             </div>
         </main>
