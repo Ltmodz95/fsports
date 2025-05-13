@@ -1,14 +1,16 @@
 'use client'
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 
-export default function ProductDetailsPage({ params }: { params: { productId: string } }) {
-    const { productId } = params;
+export default function ProductDetailsPage({ params }: { params: Promise<{ productId: string }> }) {
+    const { productId } = use(params);
     const [product, setProduct] = useState<any>(null);
+    const [price, setPrice] = useState<any>(null);
     const [selectedOptions, setSelectedOptions] = useState<any>({});
     const [compatibilityIssues, setCompatibilityIssues] = useState<any>([]);
+    const [adjustments, setAdjustments] = useState<any>(null);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -21,6 +23,7 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
 
     useEffect(() => {
         checkCompatibility();
+        calculatePrice();
     }, [selectedOptions]);
 
     const checkCompatibility = async () => {
@@ -47,12 +50,20 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
         setSelectedOptions({ ...selectedOptions, [componentId]: optionId });
     };
 
-    const calculatePrice = () => {
-        let price = parseFloat(product?.base_price || '0');
-        product?.components.forEach((component: any) => {
-            price += parseFloat(component.options.find((option: any) => option.id === selectedOptions[component.id])?.price || '0');
+    const calculatePrice = async () => {
+        const response = await fetch(`http://localhost:3000/products/calculate_product_price`, {
+            method: 'POST',
+            body: JSON.stringify({
+                product_id: productId,
+                selected_options: Object.values(selectedOptions)
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
-        return price;
+        const data = await response.json();
+        setPrice(data['total']);
+        setAdjustments(data['adjustments']);
     }
 
     const handleAddToCart = () => {
@@ -138,8 +149,12 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
                         }`}
                     >
                         <span>Add to Cart</span>
-                        <span className="font-medium">${calculatePrice()}</span>
+                        <span className="font-medium">${price || product?.base_price}</span>
                     </button>
+
+                    <div className="mt-2 text-sm text-neutral-500 flex items-center justify-center gap-2">
+                        { adjustments !== 0 && <span className="font-medium">* a total of {adjustments}$ is {adjustments > 0 ? 'added' : 'subtracted'} to the price, based on the selected options</span>}
+                    </div>
                 </div>
             </div>
         </main>
