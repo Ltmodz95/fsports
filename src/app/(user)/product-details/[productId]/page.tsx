@@ -1,6 +1,7 @@
 'use client'
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface Option {
     id: string;
@@ -30,7 +31,20 @@ const productOptions: ProductOption[] = [
 
 const basePrice = 299.99;
 
-export default function ProductDetailsPage() {
+export default function ProductDetailsPage({ params }: { params: { productId: string } }) {
+    const { productId } = params;
+    console.log(productId);
+    const [product, setProduct] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            const response = await fetch(`http://localhost:3000/products/${productId}`);
+            const product = await response.json();
+            setProduct(product);
+        };
+        fetchProduct();
+    }, []);
+
     return (
         <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -45,10 +59,10 @@ export default function ProductDetailsPage() {
 
                 <div className="flex flex-col h-full">
                     <div className="space-y-6">
-                        <h1 className="text-3xl font-bold text-neutral-900">Product Name</h1>
+                        <h1 className="text-3xl font-bold text-neutral-900">{product?.name}</h1>
                         <div className="space-y-1">
                             <p className="text-sm text-neutral-500">Base Price</p>
-                            <p className="text-2xl font-semibold text-neutral-700">${basePrice}</p>
+                            <p className="text-2xl font-semibold text-neutral-700">${product?.base_price}</p>
                         </div>
                     </div>
 
@@ -57,21 +71,7 @@ export default function ProductDetailsPage() {
                             <h2 className="text-xl font-semibold text-neutral-900 mb-4">Description</h2>
                             <div className="prose prose-neutral">
                                 <p className="text-neutral-600 mb-4">
-                                    Experience the perfect blend of style and comfort with our premium product. 
-                                    Crafted with attention to detail and using only the finest materials, this 
-                                    piece is designed to exceed your expectations.
-                                </p>
-                                <p className="text-neutral-600 mb-4">
-                                    Our commitment to quality is evident in every stitch and detail. Each piece 
-                                    is carefully crafted to ensure durability and comfort, making it a perfect 
-                                    addition to your collection. The premium materials we use are selected for 
-                                    their superior quality and sustainability.
-                                </p>
-                                <p className="text-neutral-600 mb-4">
-                                    The design philosophy behind this product focuses on both aesthetics and 
-                                    functionality. We believe that style should never compromise comfort, and 
-                                    our products reflect this balance perfectly. Whether you're looking for 
-                                    everyday wear or something special, this piece delivers on all fronts.
+                                    {product?.description}
                                 </p>
                             </div>
                         </div>
@@ -86,11 +86,11 @@ export default function ProductDetailsPage() {
                             </ul>
                         </div>
 
-                        {productOptions.map((option) => (
-                            <div key={option.id} className="space-y-2">
-                                <h3 className="text-lg font-medium text-neutral-900">{option.name}</h3>
+                        {product?.components.map((component: any) => (
+                            <div key={component.id} className="space-y-2">
+                                <h3 className="text-lg font-medium text-neutral-900">{component.name}</h3>
                                 <div className="flex flex-wrap gap-2">
-                                    {option.options.map((opt) => (
+                                    {/* {option.options.map((opt) => (
                                         <div
                                             key={opt.id}
                                             className="px-4 py-2 border border-neutral-300 rounded-md"
@@ -102,7 +102,7 @@ export default function ProductDetailsPage() {
                                                 </span>
                                             )}
                                         </div>
-                                    ))}
+                                    ))} */}
                                 </div>
                             </div>
                         ))}
