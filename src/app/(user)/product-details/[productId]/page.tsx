@@ -3,11 +3,9 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const basePrice = 299.99;
 
 export default function ProductDetailsPage({ params }: { params: { productId: string } }) {
     const { productId } = params;
-    console.log(productId);
     const [product, setProduct] = useState<any>(null);
     const [selectedOptions, setSelectedOptions] = useState<any>({});
     const [compatibilityIssues, setCompatibilityIssues] = useState<any>([]);
@@ -21,7 +19,27 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
         fetchProduct();
     }, []);
 
-    const handleOptionSelection = (componentId: string, optionId: string) => {
+    useEffect(() => {
+        checkCompatibility();
+    }, [selectedOptions]);
+
+    const checkCompatibility = async () => {
+        console.log(selectedOptions);
+        console.log("here");
+        const response = await fetch(`http://localhost:3000/options/check_compatibility`, {
+            method: 'POST',
+            body: JSON.stringify({
+                selected_options: Object.values(selectedOptions)
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const inCompatibilityMessages = await response.json();
+        setCompatibilityIssues(inCompatibilityMessages);
+    }
+
+    const handleOptionSelection = async (componentId: string, optionId: string) => {
         if (selectedOptions[componentId] === optionId) {
             const newSelectedOptions = { ...selectedOptions };
             delete newSelectedOptions[componentId];
@@ -29,7 +47,6 @@ export default function ProductDetailsPage({ params }: { params: { productId: st
             return;
         }
         setSelectedOptions({ ...selectedOptions, [componentId]: optionId });
-        console.log(selectedOptions);
     };
 
     const calculatePrice = () => {
