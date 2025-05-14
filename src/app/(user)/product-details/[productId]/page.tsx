@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-
+import { useRouter } from "next/navigation";
 export default function ProductDetailsPage({ params }: { params: Promise<{ productId: string }> }) {
     const { productId } = use(params);
     const [product, setProduct] = useState<any>(null);
@@ -11,11 +11,11 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ produ
     const [selectedOptions, setSelectedOptions] = useState<any>({});
     const [compatibilityIssues, setCompatibilityIssues] = useState<any>([]);
     const [adjustments, setAdjustments] = useState<any>(null);
-
+    const router = useRouter();
     const token = Cookies.get('session');
     useEffect(() => {
         const fetchProduct = async () => {
-            const response = await fetch(`http://localhost:3000/products/${productId}`,{
+            const response = await fetch(`http://localhost:3000/api/v1/products/${productId}`,{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -32,7 +32,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ produ
     }, [selectedOptions]);
 
     const checkCompatibility = async () => {
-        const response = await fetch(`http://localhost:3000/options/check_compatibility`, {
+        const response = await fetch(`http://localhost:3000/api/v1/options/check_compatibility`, {
             method: 'POST',
             body: JSON.stringify({
                 selected_options: Object.values(selectedOptions)
@@ -57,7 +57,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ produ
     };
 
     const calculatePrice = async () => {
-        const response = await fetch(`http://localhost:3000/products/calculate_product_price`, {
+        const response = await fetch(`http://localhost:3000/api/v1/products/calculate_product_price`, {
             method: 'POST',
             body: JSON.stringify({
                 product_id: productId,
@@ -73,8 +73,29 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ produ
         setAdjustments(data['adjustments']);
     }
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         if (compatibilityIssues.length > 0) return;
+
+        const response = await fetch(`http://localhost:3000/api/v1/cart_items`, {
+            method: 'POST',
+            body: JSON.stringify({
+                cart_item: {
+                    product_id: productId,
+                    options: Object.values(selectedOptions)
+                }
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            router.push('/shopping-cart');
+        }
+        else {
+            console.log("failed to add to cart");
+        }
     };
 
     return (
@@ -149,7 +170,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ produ
                     <button 
                         onClick={handleAddToCart}
                         disabled={compatibilityIssues.length > 0}
-                        className={`w-full py-3 px-6 rounded-md flex items-center justify-between mt-6 transition-colors ${
+                        className={`w-full py-3 px-6 rounded-md flex items-center cursor-pointer justify-between mt-6 transition-colors ${
                             compatibilityIssues.length > 0 
                                 ? 'bg-neutral-300 text-neutral-500 cursor-not-allowed' 
                                 : 'bg-black text-white hover:bg-neutral-800'

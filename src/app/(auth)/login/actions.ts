@@ -5,7 +5,7 @@ import { redirect, RedirectType } from 'next/navigation'
 
 export async function login(formData: { email_address: string; password: string }) {
 
-    const response = await fetch('http://localhost:3000/session', {
+    const response = await fetch('http://localhost:3000/api/v1/session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 export default async function ProductsPage() {
     const cookieStore = await cookies();
     const token = cookieStore.get('session')?.value;
-    const response = await fetch('http://localhost:3000/products',{
+    const response = await fetch('http://localhost:3000/api/v1/products', {
         headers: {
             'Authorization': `Bearer ${token}`
         }

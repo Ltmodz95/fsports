@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 
 export default  async function MainHeader() {
   const cookieStore = await cookies();  
-  const response =  await fetch('http://localhost:3000/categories',{
+  const response =  await fetch('http://localhost:3000/api/v1/categories',{
     headers: {
       'Authorization': `Bearer ${cookieStore.get('session')?.value}`
     }
