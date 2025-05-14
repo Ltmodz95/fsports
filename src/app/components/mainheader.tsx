@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { ShoppingCartIcon, UserIcon } from '@heroicons/react/24/outline';
+import api from '@/lib/axios';
 
 export default async function MainHeader() {
 
-  const response = await fetch('http://localhost:3000/categories');
-  const categories = await response.json();
+  const response = await api.get('/categories');
+  const categories = response.data;
 
   return (
     <header className="z-50 py-4 sticky top-0 bg-white/90 backdrop-blur-xs nav-border-reveal">
