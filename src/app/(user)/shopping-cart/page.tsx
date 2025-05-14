@@ -54,7 +54,7 @@ export default function ShoppingCartPage() {
                                                 <div className="flex justify-between items-start">
                                                     <div className="space-y-1">
                                                         {(JSON.parse(item.selected_options)||[]).map ((option: any) => (
-                                                            <p className="text-sm text-neutral-600">{option[1]}: <span className="text-neutral-900">{option[2]}</span></p>
+                                                            <p key={option[0]} className="text-sm text-neutral-600">{option[1]}: <span className="text-neutral-900">{option[2]}</span></p>
                                                         ))}
                                                     </div>
                                                     <button className="text-red-600 hover:text-red-700 text-sm">
