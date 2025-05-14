@@ -31,6 +31,8 @@ cd fsoprts-frontend
 ```bash
 npm install
 ```
+Make sure that the backend is running before you run this command
+
 
 3. Start the development server:
 ```bash
