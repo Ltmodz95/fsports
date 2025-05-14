@@ -79,10 +79,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ produ
         const response = await fetch(`http://localhost:3000/api/v1/cart_items`, {
             method: 'POST',
             body: JSON.stringify({
-                cart_item: {
                     product_id: productId,
-                    options: Object.values(selectedOptions)
-                }
+                    selected_options: Object.values(selectedOptions)
             }),
             headers: {
                 'Content-Type': 'application/json',
