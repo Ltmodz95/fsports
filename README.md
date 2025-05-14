@@ -50,4 +50,20 @@ src/
 └── public/            # Static assets
 ```
 
+## Test Accounts
+
+For testing purposes, you can use the following accounts:
+
+### Regular User
+```
+Email: user@test.com
+Password: 123456
+```
+
+### Admin User
+```
+Email: admin@test.com
+Password: 123456
+```
+
 

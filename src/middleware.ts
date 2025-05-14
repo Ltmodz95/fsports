@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next()
     }
     console.log(request.nextUrl.pathname)
-    const response = await fetch('http://localhost:3000/api/v1/sessions/verfiy?token=' + session)
+    const response = await fetch('http://localhost:3000/api/v1/session/verify?token=' + session)
 
     if (response.status === 401) {
         cookieStore.delete('session')
