@@ -1,7 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { redirect, RedirectType } from 'next/navigation'
 
 export async function login(formData: { email_address: string; password: string }) {
 
@@ -22,9 +22,8 @@ export async function login(formData: { email_address: string; password: string 
     // Set the session cookie
     const cookieStore = await cookies()
     cookieStore.set('session', data['data']['token'], {
-      httpOnly: true,
-      sameSite: 'strict',
       maxAge: 24 * 60 * 60, // 24 hours
     })
-    redirect('/products')
+    redirect('/products', RedirectType.push)
+
 } 

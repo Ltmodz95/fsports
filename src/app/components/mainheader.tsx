@@ -1,11 +1,19 @@
+
+
+
 import Link from 'next/link';
 import { ShoppingCartIcon, UserIcon } from '@heroicons/react/24/outline';
-import api from '@/lib/axios';
+import { cookies } from 'next/headers';
 
-export default async function MainHeader() {
-
-  const response = await api.get('/categories');
-  const categories = response.data;
+export default  async function MainHeader() {
+  const cookieStore = await cookies();  
+  const response =  await fetch('http://localhost:3000/categories',{
+    headers: {
+      'Authorization': `Bearer ${cookieStore.get('session')?.value}`
+    }
+  });
+  console.log(response)
+  const categories = await response.json();
 
   return (
     <header className="z-50 py-4 sticky top-0 bg-white/90 backdrop-blur-xs nav-border-reveal">

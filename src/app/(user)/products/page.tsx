@@ -1,9 +1,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
-
+import { cookies } from 'next/headers'
 
 export default async function ProductsPage() {
-    const response = await fetch('http://localhost:3000/products');
+    const cookieStore = await cookies();
+    const token = cookieStore.get('session')?.value;
+    const response = await fetch('http://localhost:3000/products',{
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
     const products = await response.json();
 
     return (

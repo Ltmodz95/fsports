@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
-
+import Cookies from "js-cookie";
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ productId: string }> }) {
     const { productId } = use(params);
@@ -12,9 +12,14 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ produ
     const [compatibilityIssues, setCompatibilityIssues] = useState<any>([]);
     const [adjustments, setAdjustments] = useState<any>(null);
 
+    const token = Cookies.get('session');
     useEffect(() => {
         const fetchProduct = async () => {
-            const response = await fetch(`http://localhost:3000/products/${productId}`);
+            const response = await fetch(`http://localhost:3000/products/${productId}`,{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             const product = await response.json();
             setProduct(product);
         };
@@ -33,7 +38,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ produ
                 selected_options: Object.values(selectedOptions)
             }),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
         });
         const inCompatibilityMessages = await response.json();
@@ -58,7 +64,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ produ
                 selected_options: Object.values(selectedOptions)
             }),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
         });
         const data = await response.json();
