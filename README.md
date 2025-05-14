@@ -23,7 +23,7 @@ A modern e-commerce frontend application built with Next.js, React, and TypeScri
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
+git clone [https://github.com/Ltmodz95/fsports]
 cd fsoprts-frontend
 ```
 
