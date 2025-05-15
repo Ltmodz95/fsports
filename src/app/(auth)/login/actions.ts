@@ -24,6 +24,13 @@ export async function login(formData: { email_address: string; password: string 
     cookieStore.set('session', data['data']['token'], {
       maxAge: 24 * 60 * 60, // 24 hours
     })
-    redirect('/products', RedirectType.push)
+    cookieStore.set('user_role', data['data']['user_role'], {
+      maxAge: 24 * 60 * 60, // 24 hours
+    })
+    if (data['data']['user_role'] === 'admin') {
+      redirect('/admin', RedirectType.push)
+    } else {
+      redirect('/products', RedirectType.push)
+    }
 
 } 

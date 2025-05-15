@@ -10,9 +10,17 @@ export async function middleware(request: NextRequest) {
     if (publicRoutes.includes(request.nextUrl.pathname)) {
         return NextResponse.next()
     }
-    console.log(request.nextUrl.pathname)
     const response = await fetch('http://localhost:3000/api/v1/session/verify?token=' + session)
-
+    
+    if (request.nextUrl.pathname.startsWith('/admin')) {
+        const data = await response.json()
+        if (data["data"]["user_role"] !== 'admin') {
+            cookieStore.delete("user_role")
+            cookieStore.delete('session')
+            const redirectResponse = NextResponse.redirect(new URL('/login', request.url))
+            return redirectResponse
+        }
+    }
     if (response.status === 401) {
         cookieStore.delete('session')
         const redirectResponse = NextResponse.redirect(new URL('/login', request.url))
