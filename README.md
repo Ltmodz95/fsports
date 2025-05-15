@@ -1,4 +1,4 @@
-# FSOPRTS Frontend
+# FSPORTS Frontend
 
 A modern e-commerce frontend application built with Next.js, React, and TypeScript. This project provides a sleek and responsive user interface for an online sports equipment store.
 
