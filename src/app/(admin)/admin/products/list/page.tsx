@@ -108,13 +108,10 @@ export default function ProductsListPage() {
                                     Base Price
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    In Stock
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Category
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Created At
+                                    In Stock
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Actions
@@ -123,37 +120,46 @@ export default function ProductsListPage() {
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {products.map((product) => (
-                                <tr key={product.id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                                <tr key={product.id}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {product.name}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">${product.base_price}</div>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        ${product.base_price}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <StockStatus inStock={product.in_stock > 0} />
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {product.category?.name || 'Uncategorized'}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">{product.category.name}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-500">
-                                            {new Date(product.created_at).toLocaleDateString()}
-                                        </div>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {product.in_stock ? 'Yes' : 'No'}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button
-                                            onClick={() => handleDelete(product.id)}
-                                            className="text-black hover:text-gray-600 mr-4 transition-colors duration-200"
-                                        >
-                                            Delete
-                                        </button>
-                                        <Link
-                                            href={`/admin/products/edit/${product.id}`}
-                                            className="text-black hover:text-gray-600 transition-colors duration-200"
-                                        >
-                                            Edit
-                                        </Link>
+                                        <div className="flex justify-end space-x-3">
+                                            <Link
+                                                href={`/admin/products/${product.id}/incompatibility-rules`}
+                                                className="text-indigo-600 hover:text-indigo-900"
+                                            >
+                                                Incompatibility Rules
+                                            </Link>
+                                            <Link
+                                                href={`/admin/products/${product.id}/pricing-rules`}
+                                                className="text-indigo-600 hover:text-indigo-900"
+                                            >
+                                                Pricing Rules
+                                            </Link>
+                                            <Link
+                                                href={`/admin/products/${product.id}/edit`}
+                                                className="text-indigo-600 hover:text-indigo-900"
+                                            >
+                                                Edit
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(product.id)}
+                                                className="text-red-600 hover:text-red-900"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
