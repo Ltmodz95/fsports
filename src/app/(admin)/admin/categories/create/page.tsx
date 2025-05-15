@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 import Cookies from 'js-cookie'
-export default function CategoriesPage() {
+import { useRouter } from 'next/navigation'
+export default function CreateCategoryPage() {
+    const router = useRouter()
     const [categoryName, setCategoryName] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -10,9 +12,7 @@ export default function CategoriesPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsSubmitting(true)
-        // TODO: Add API call to create category
-        console.log('Category name:', categoryName)
-        // Simulate API call
+
         const response = await fetch('http://localhost:3000/api/v1/categories', {
             method: 'POST',
             body: JSON.stringify({ name: categoryName }),
@@ -25,6 +25,7 @@ export default function CategoriesPage() {
         console.log(data)
         setIsSubmitting(false)
         setCategoryName('')
+        router.push('/admin/categories')
     }
 
     return (

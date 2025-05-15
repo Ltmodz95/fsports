@@ -11,7 +11,7 @@ interface Category {
     updated_at: string
 }
 
-export default function CategoriesListPage() {
+export default function CategoriesPage() {
     const [categories, setCategories] = useState<Category[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const token = Cookies.get('session')
