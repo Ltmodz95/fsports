@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import ComponentManager from './components/ComponentManager'
-import CompatibilityRules from './components/CompatibilityRules'
 
 interface Category {
     id: number
@@ -18,18 +17,12 @@ interface Component {
     options: { name: string; price: string }[]
 }
 
-interface Rule {
-    first_option_id: string
-    second_option_id: string
-}
-
 export default function CreateProductPage() {
     const router = useRouter()
     const [categories, setCategories] = useState<Category[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [components, setComponents] = useState<Component[]>([])
-    const [rules, setRules] = useState<Rule[]>([])
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -80,8 +73,7 @@ export default function CreateProductPage() {
                             ...opt,
                             price: parseFloat(opt.price)
                         }))
-                    })),
-                    compatibility_rules_attributes: rules
+                    }))
                 })
             })
 
@@ -215,12 +207,6 @@ export default function CreateProductPage() {
                     <ComponentManager 
                         components={components}
                         onComponentsChange={setComponents}
-                    />
-
-                    {/* Compatibility Rules Section */}
-                    <CompatibilityRules 
-                        components={components}
-                        onRulesChange={setRules}
                     />
 
                     <div className="flex justify-end space-x-4">
