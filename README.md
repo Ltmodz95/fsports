@@ -68,4 +68,6 @@ Email: admin@test.com
 Password: 123456
 ```
 
+to access admin page navigate to `/admin`
+
 
